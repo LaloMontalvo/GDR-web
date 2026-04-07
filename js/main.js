@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAccordion();
   init3DCards();
   initProjectModal();
+  initMobileVideo();
 });
 
 /* ── 3D Tilt Project Cards (Vanilla JS) ── */
@@ -535,5 +536,21 @@ function initProjectModal() {
       prevSlide(); // Swipe right → prev
     }
   }
+}
+
+/* ── Mobile Video Autoplay Fallback ── */
+function initMobileVideo() {
+  const video = document.getElementById('hero-video');
+  if (!video) return;
+
+  // Attempt to play on first interaction if it's paused
+  const playVideo = () => {
+    if (video.paused) {
+      video.play().catch(e => console.log('Autoplay preventions:', e));
+    }
+  };
+
+  document.addEventListener('touchstart', playVideo, { once: true, passive: true });
+  document.addEventListener('click', playVideo, { once: true, passive: true });
 }
 

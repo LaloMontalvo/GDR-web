@@ -554,3 +554,38 @@ function initMobileVideo() {
   document.addEventListener('click', playVideo, { once: true, passive: true });
 }
 
+/* ── Contact Form AJAX Submission (EmailJS) ── */
+// IMPORTANTE: Reemplaza 'TU_PUBLIC_KEY' con tu Public Key de EmailJS
+emailjs.init({
+  publicKey: "ht8MejfeTbMaXBbpR",
+});
+
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+  contactForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const submitBtn = contactForm.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerText;
+    submitBtn.innerText = 'Enviando...';
+    submitBtn.disabled = true;
+
+    // IMPORTANTE: Reemplaza con tus IDs de EmailJS
+    const serviceID = 'service_wt4mjg5';
+    const templateID = 'template_5el2r6l';
+
+    emailjs.sendForm(serviceID, templateID, this)
+      .then(() => {
+        alert('¡Gracias por tu mensaje! Nos pondremos en contacto contigo a la brevedad.');
+        contactForm.reset();
+      }, (error) => {
+        alert('Ocurrió un error al enviar el formulario. Por favor, revisa tus credenciales o intenta de nuevo.');
+        console.error('Error EmailJS:', error);
+      })
+      .finally(() => {
+        submitBtn.innerText = originalBtnText;
+        submitBtn.disabled = false;
+      });
+  });
+}
+

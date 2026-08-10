@@ -677,7 +677,9 @@
             Cuéntanos sobre tu proyecto y nos pondremos en contacto contigo a la brevedad.
           </p>
 
-          <form class="contact-form reveal w-full max-w-none lg:max-w-xl" id="contact-form" onsubmit="event.preventDefault(); alert('¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');">
+          <form class="contact-form reveal w-full max-w-none lg:max-w-xl" id="contact-form" action="https://formsubmit.co/montalvoolguineduardo@gmail.com" method="POST">
+            <input type="hidden" name="_subject" value="Nuevo mensaje desde la web de GDR">
+            <input type="hidden" name="_captcha" value="false">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div class="form-group">
                 <label for="name" class="text-xs sm:text-sm">Nombre</label>

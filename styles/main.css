@@ -1159,9 +1159,15 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Client Carousel ── */
 .clients-track {
   display: flex;
-  animation: scroll 15s linear infinite;
+  animation: scroll 20s linear infinite;
   gap: var(--space-3xl);
   padding: var(--space-2xl) 0;
+}
+
+@media (max-width: 768px) {
+  .clients-track {
+    animation: scroll 10s linear infinite;
+  }
 }
 
 .clients-track:hover {

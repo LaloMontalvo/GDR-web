@@ -560,6 +560,59 @@ emailjs.init({
   publicKey: "ht8MejfeTbMaXBbpR",
 });
 
+/* ── Notification Modal System ── */
+const notifOverlay = document.getElementById('notifOverlay');
+const notifModal = document.getElementById('notifModal');
+const notifClose = document.getElementById('notifClose');
+const notifBtn = document.getElementById('notifBtn');
+const notifTitle = document.getElementById('notifTitle');
+const notifText = document.getElementById('notifText');
+const notifIconSuccess = document.getElementById('notifIconSuccess');
+const notifIconError = document.getElementById('notifIconError');
+
+function showNotification(type, title, message) {
+  // Set content
+  notifTitle.textContent = title;
+  notifText.textContent = message;
+
+  // Toggle icons
+  if (type === 'success') {
+    notifIconSuccess.style.display = '';
+    notifIconError.style.display = 'none';
+  } else {
+    notifIconSuccess.style.display = 'none';
+    notifIconError.style.display = '';
+  }
+
+  // Reset SVG animations by removing and re-adding active class
+  notifOverlay.classList.remove('active');
+  // Force reflow to restart animations
+  void notifOverlay.offsetWidth;
+  notifOverlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeNotification() {
+  notifOverlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Close handlers
+if (notifClose) notifClose.addEventListener('click', closeNotification);
+if (notifBtn) notifBtn.addEventListener('click', closeNotification);
+if (notifOverlay) {
+  notifOverlay.addEventListener('click', function(e) {
+    if (e.target === notifOverlay) closeNotification();
+  });
+}
+
+// Close with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && notifOverlay && notifOverlay.classList.contains('active')) {
+    closeNotification();
+  }
+});
+
 const contactForm = document.getElementById('contact-form');
 if (contactForm) {
   contactForm.addEventListener('submit', function(e) {
@@ -572,14 +625,22 @@ if (contactForm) {
 
     // IMPORTANTE: Reemplaza con tus IDs de EmailJS
     const serviceID = 'service_wt4mjg5';
-    const templateID = 'template_5el2r6l';
+    const templateID = 'template_0ulw53h';
 
     emailjs.sendForm(serviceID, templateID, this)
       .then(() => {
-        alert('¡Gracias por tu mensaje! Nos pondremos en contacto contigo a la brevedad.');
+        showNotification(
+          'success',
+          'Mensaje Enviado Exitosamente',
+          'Hemos recibido tu mensaje. Nuestro equipo de GDR Desarrollos Inmobiliarios se pondrá en contacto contigo a la brevedad posible.'
+        );
         contactForm.reset();
       }, (error) => {
-        alert('Ocurrió un error al enviar el formulario. Por favor, revisa tus credenciales o intenta de nuevo.');
+        showNotification(
+          'error',
+          'Error al Enviar',
+          'Ocurrió un problema al enviar tu mensaje. Por favor, intenta nuevamente o contáctanos directamente por teléfono.'
+        );
         console.error('Error EmailJS:', error);
       })
       .finally(() => {

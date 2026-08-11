@@ -2964,3 +2964,240 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+/* ════════════════════════════════════════════════
+   Notification Modal — Premium Formal Design
+   ════════════════════════════════════════════════ */
+
+.notif-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(10, 15, 25, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.notif-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.notif-modal {
+  background: var(--color-white);
+  border-radius: 20px;
+  padding: 48px 40px 36px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(201, 168, 76, 0.1);
+  transform: scale(0.85) translateY(30px);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+              opacity 0.4s ease;
+}
+
+.notif-overlay.active .notif-modal {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+/* Close button */
+.notif-modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-gray-100);
+  color: var(--color-gray-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.notif-modal__close:hover {
+  background: var(--color-gray-200);
+  color: var(--color-primary);
+  transform: rotate(90deg);
+}
+
+/* Logo */
+.notif-modal__logo {
+  margin-bottom: 24px;
+}
+
+.notif-modal__logo-img {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.08));
+}
+
+/* Animated icon */
+.notif-modal__icon-wrapper {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 24px;
+}
+
+.notif-modal__icon {
+  width: 72px;
+  height: 72px;
+}
+
+.notif-modal__icon--success {
+  color: #22c55e;
+}
+
+.notif-modal__icon--error {
+  color: #ef4444;
+}
+
+/* Circle draw animation */
+.notif-modal__icon-circle {
+  stroke-dasharray: 150;
+  stroke-dashoffset: 150;
+  animation: none;
+}
+
+.notif-overlay.active .notif-modal__icon-circle {
+  animation: notifDrawCircle 0.6s 0.3s ease-out forwards;
+}
+
+@keyframes notifDrawCircle {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Check draw animation */
+.notif-modal__icon-check {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: none;
+}
+
+.notif-overlay.active .notif-modal__icon-check {
+  animation: notifDrawCheck 0.4s 0.7s ease-out forwards;
+}
+
+@keyframes notifDrawCheck {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* X draw animation */
+.notif-modal__icon-x {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: none;
+}
+
+.notif-overlay.active .notif-modal__icon-x {
+  animation: notifDrawX 0.3s 0.7s ease-out forwards;
+}
+
+@keyframes notifDrawX {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Title */
+.notif-modal__title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+
+/* Body text */
+.notif-modal__text {
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  color: var(--color-gray-600);
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+
+/* Divider */
+.notif-modal__divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+  margin: 0 auto 16px;
+}
+
+/* Footer branding */
+.notif-modal__footer {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--color-accent);
+  margin-bottom: 24px;
+}
+
+/* CTA button */
+.notif-modal__btn {
+  width: 100%;
+  max-width: 220px;
+  padding: 14px 32px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .notif-modal {
+    padding: 36px 24px 28px;
+    border-radius: 16px;
+  }
+
+  .notif-modal__logo-img {
+    height: 40px;
+  }
+
+  .notif-modal__icon-wrapper {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
+  }
+
+  .notif-modal__icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .notif-modal__title {
+    font-size: 1.15rem;
+  }
+
+  .notif-modal__text {
+    font-size: 0.85rem;
+  }
+
+  .notif-modal__footer {
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+  }
+}

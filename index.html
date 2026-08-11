@@ -999,6 +999,38 @@
     </div>
   </div>
 
+  <!-- ════════ NOTIFICATION MODAL ════════ -->
+  <div class="notif-overlay" id="notifOverlay">
+    <div class="notif-modal" id="notifModal">
+      <button class="notif-modal__close" id="notifClose" aria-label="Cerrar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <div class="notif-modal__logo">
+        <img src="images/logo.png" alt="GDR Desarrollos Inmobiliarios" class="notif-modal__logo-img">
+      </div>
+      <div class="notif-modal__icon-wrapper" id="notifIconWrapper">
+        <!-- Success icon (default) -->
+        <svg class="notif-modal__icon notif-modal__icon--success" id="notifIconSuccess" viewBox="0 0 52 52">
+          <circle class="notif-modal__icon-circle" cx="26" cy="26" r="24" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path class="notif-modal__icon-check" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M15 27l7 7 15-15"/>
+        </svg>
+        <!-- Error icon -->
+        <svg class="notif-modal__icon notif-modal__icon--error" id="notifIconError" viewBox="0 0 52 52" style="display:none">
+          <circle class="notif-modal__icon-circle" cx="26" cy="26" r="24" fill="none" stroke="currentColor" stroke-width="2"/>
+          <line class="notif-modal__icon-x" x1="18" y1="18" x2="34" y2="34" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+          <line class="notif-modal__icon-x" x1="34" y1="18" x2="18" y2="34" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3 class="notif-modal__title" id="notifTitle">Mensaje Enviado</h3>
+      <p class="notif-modal__text" id="notifText">Hemos recibido tu mensaje exitosamente. Nuestro equipo se pondrá en contacto contigo a la brevedad.</p>
+      <div class="notif-modal__divider"></div>
+      <p class="notif-modal__footer">GDR Desarrollos Inmobiliarios</p>
+      <button class="btn btn-primary notif-modal__btn" id="notifBtn">Entendido</button>
+    </div>
+  </div>
+
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script src="js/main.js"></script>
 </body>

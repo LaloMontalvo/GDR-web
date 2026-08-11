@@ -635,7 +635,7 @@ window.addEventListener('load', function() {
 
       // IMPORTANTE: Reemplaza con tus IDs de EmailJS
       const serviceID = 'service_wt4mjg5';
-      const templateID = 'template_0ulw53h';
+      const templateID = 'template_4hek8e4';
 
       emailjs.sendForm(serviceID, templateID, contactForm)
         .then(function() {

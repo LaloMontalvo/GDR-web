@@ -2,13 +2,9 @@ import os
 from PIL import Image
 
 images = [
-    'images/hero/nosotros1.jpeg',
-    'images/hero/nosotros2.jpeg',
-    'images/equipo/antonio.jpeg',
-    'images/equipo/irving.jpeg',
-    'images/equipo/juancarlos.jpeg',
-    'images/equipo/evelyn.jpeg',
-    'images/equipo/eduardo.jpeg'
+    'images/equipo/arcadio.png',
+    'images/equipo/jose.png',
+    'images/hero/hero.png'
 ]
 
 for img_path in images:

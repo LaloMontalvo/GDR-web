@@ -177,41 +177,94 @@
         </div>
         <div class="reveal-right order-1 lg:order-2 relative w-full">
           <style>
-            .hide-scrollbar::-webkit-scrollbar { display: none; }
-            .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+            .about-carousel-arrow {
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+              z-index: 10;
+              width: 42px;
+              height: 42px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 50%;
+              cursor: pointer;
+              background: rgba(10,22,40,0.55);
+              backdrop-filter: blur(10px);
+              border: 1.5px solid rgba(201,168,76,0.4);
+              color: #c9a84c;
+              transition: all 0.3s ease;
+            }
+            .about-carousel-arrow:hover {
+              background: #c9a84c;
+              color: #0a1628;
+              border-color: #c9a84c;
+              transform: translateY(-50%) scale(1.1);
+              box-shadow: 0 4px 20px rgba(201,168,76,0.4);
+            }
+            .about-carousel-arrow--prev { left: 12px; }
+            .about-carousel-arrow--next { right: 12px; }
+            
+            .about-slide {
+              position: absolute;
+              top: 0; left: 0;
+              width: 100%; height: 100%;
+              opacity: 0;
+              transition: opacity 0.7s ease, transform 0.7s ease;
+              transform: scale(1.04);
+              z-index: 1;
+            }
+            .about-slide.active {
+              opacity: 1;
+              transform: scale(1);
+              z-index: 2;
+            }
           </style>
-          <div id="aboutCarousel" class="flex overflow-x-auto snap-x snap-mandatory w-full rounded-lg shadow-xl hide-scrollbar" style="scroll-behavior: smooth;">
+          <div class="relative w-full rounded-lg shadow-xl overflow-hidden aspect-[4/3] lg:aspect-[4/3] xl:aspect-[16/10]" id="aboutCarousel" style="min-height:300px;">
             <!-- Imagen 1 -->
-            <div class="snap-center shrink-0 w-full h-full">
-              <img src="images/equipo/equipo.webp" alt="Acerca de Nosotros 1" class="w-full h-full object-cover aspect-[4/3] lg:aspect-auto" width="1200" height="900" loading="lazy">
+            <div class="about-slide active">
+              <img src="images/hero/nosotros1.webp" alt="Acerca de Nosotros 1" class="w-full h-full object-cover" loading="lazy">
             </div>
             <!-- Imagen 2 -->
-            <div class="snap-center shrink-0 w-full h-full">
-              <img src="images/equipo/equipo.webp" alt="Acerca de Nosotros 2" class="w-full h-full object-cover aspect-[4/3] lg:aspect-auto" width="1200" height="900" loading="lazy">
+            <div class="about-slide">
+              <img src="images/hero/nosotros2.webp" alt="Acerca de Nosotros 2" class="w-full h-full object-cover" loading="lazy">
             </div>
-            <!-- Imagen 3 -->
-            <div class="snap-center shrink-0 w-full h-full">
-              <img src="images/equipo/equipo.webp" alt="Acerca de Nosotros 3" class="w-full h-full object-cover aspect-[4/3] lg:aspect-auto" width="1200" height="900" loading="lazy">
-            </div>
+          
+            
+            <!-- Flechas de navegación -->
+            <button class="about-carousel-arrow about-carousel-arrow--prev" id="aboutCarouselPrev" aria-label="Anterior">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <button class="about-carousel-arrow about-carousel-arrow--next" id="aboutCarouselNext" aria-label="Siguiente">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+            </button>
           </div>
           
-          <!-- Script para AutoPlay -->
+          <!-- Script para AutoPlay, Flechas y Swipe -->
           <script>
             document.addEventListener("DOMContentLoaded", function() {
               const carousel = document.getElementById('aboutCarousel');
-              if (!carousel) return;
+              const prevBtn = document.getElementById('aboutCarouselPrev');
+              const nextBtn = document.getElementById('aboutCarouselNext');
+              const slides = carousel ? carousel.querySelectorAll('.about-slide') : [];
+              if (!carousel || slides.length === 0) return;
               
+              let currentSlide = 0;
               let interval;
-              const startAutoplay = () => {
-                interval = setInterval(() => {
-                  if (carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 10) {
-                    carousel.scrollTo({ left: 0, behavior: 'smooth' });
-                  } else {
-                    carousel.scrollBy({ left: carousel.clientWidth, behavior: 'smooth' });
-                  }
-                }, 3500); // Cambia de imagen cada 3.5 segundos
-              };
               
+              const goToSlide = (index) => {
+                slides.forEach(s => s.classList.remove('active'));
+                currentSlide = (index + slides.length) % slides.length;
+                slides[currentSlide].classList.add('active');
+              };
+
+              const scrollNext = () => goToSlide(currentSlide + 1);
+              const scrollPrev = () => goToSlide(currentSlide - 1);
+
+              const startAutoplay = () => {
+                stopAutoplay();
+                interval = setInterval(scrollNext, 3500);
+              };
               const stopAutoplay = () => clearInterval(interval);
               
               // Iniciar autoplay
@@ -220,8 +273,26 @@
               // Pausar si el usuario interactúa
               carousel.addEventListener('mouseenter', stopAutoplay);
               carousel.addEventListener('mouseleave', startAutoplay);
-              carousel.addEventListener('touchstart', stopAutoplay, {passive: true});
-              carousel.addEventListener('touchend', startAutoplay, {passive: true});
+
+              // Flechas
+              if (prevBtn) prevBtn.addEventListener('click', () => { stopAutoplay(); scrollPrev(); startAutoplay(); });
+              if (nextBtn) nextBtn.addEventListener('click', () => { stopAutoplay(); scrollNext(); startAutoplay(); });
+
+              // Swipe táctil
+              let touchStartX = 0;
+              let touchEndX = 0;
+              carousel.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+                stopAutoplay();
+              }, {passive: true});
+              carousel.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                const diff = touchStartX - touchEndX;
+                if (Math.abs(diff) > 50) {
+                  if (diff > 0) { scrollNext(); } else { scrollPrev(); }
+                }
+                startAutoplay();
+              }, {passive: true});
             });
           </script>
         </div>
@@ -255,7 +326,7 @@
 
           <div class="team-card team-card--lead reveal">
             <div class="team-card__photo-frame team-card__photo-frame--gold">
-              <img src="images/equipo/antonio.jpeg" alt="José Antonio Martínez Miranda" class="team-card__photo grayscale" width="400" height="400">
+              <img src="images/equipo/antonio.webp" alt="José Antonio Martínez Miranda" class="team-card__photo grayscale" width="400" height="400">
             </div>
             <div class="team-card__info">
               <div class="team-card__name">Arq. José Antonio Martínez Miranda</div>
@@ -265,7 +336,7 @@
 
           <div class="team-card team-card--lead reveal">
             <div class="team-card__photo-frame team-card__photo-frame--gold">
-              <img src="images/equipo/irving.jpeg" alt="Irving Edilberto Ramirez Padilla" class="team-card__photo grayscale" width="400" height="400">
+              <img src="images/equipo/irving.webp" alt="Irving Edilberto Ramirez Padilla" class="team-card__photo grayscale" width="400" height="400">
             </div>
             <div class="team-card__info">
               <div class="team-card__name">Arq. Irving Edilberto Ramirez Padilla</div>
@@ -301,7 +372,7 @@
 
           <div class="team-card reveal">
             <div class="team-card__photo-frame">
-              <img src="images/equipo/juancarlos.jpeg" alt="Juan Carlos Torres Alvarez" class="team-card__photo grayscale" width="400" height="400">
+              <img src="images/equipo/juancarlos.webp" alt="Juan Carlos Torres Alvarez" class="team-card__photo grayscale" width="400" height="400">
             </div>
             <div class="team-card__info">
               <div class="team-card__name">Arq. Juan Carlos Torres Alvarez</div>
@@ -331,7 +402,7 @@
 
           <div class="team-card reveal">
             <div class="team-card__photo-frame">
-              <img src="images/equipo/evelyn.jpeg" alt="Evelyn Monserrat Cuahua Garcia" class="team-card__photo grayscale" width="400" height="400">
+              <img src="images/equipo/evelyn.webp" alt="Evelyn Monserrat Cuahua Garcia" class="team-card__photo grayscale" width="400" height="400">
             </div>
             <div class="team-card__info">
               <div class="team-card__name">Lic. Evelyn Monserrat Cuahua Garcia</div>
@@ -341,7 +412,7 @@
 
           <div class="team-card reveal">
             <div class="team-card__photo-frame">
-              <img src="images/equipo/eduardo.jpeg" alt="Eduardo Montalvo Olguin" class="team-card__photo grayscale" width="400" height="400">
+              <img src="images/equipo/eduardo.webp" alt="Eduardo Montalvo Olguin" class="team-card__photo grayscale" width="400" height="400">
             </div>
             <div class="team-card__info">
               <div class="team-card__name">Ing. Eduardo Montalvo Olguin</div>
@@ -1038,6 +1109,43 @@
       </div>
     </div>
   </div>
+
+  <!-- ════════ WHATSAPP FLOATING BUTTON ════════ -->
+  <style>
+    .whatsapp-float {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+      z-index: 9999;
+      transition: all 0.3s ease;
+      animation: pulse-wa 2s infinite;
+    }
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(37, 211, 102, 0.6);
+      animation: none;
+      color: white;
+    }
+    .whatsapp-float svg {
+      width: 35px;
+      height: 35px;
+    }
+    @keyframes pulse-wa {
+      0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
+      70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+    }
+  </style>
+  <a href="https://wa.me/522711284850?text=Hola,%20vengo%20de%20la%20página%20web%20y%20me%20gustaría%20recibir%20más%20información." class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Contáctanos por WhatsApp">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="width: 65px; height: 65px;">
+  </a>
 
   <!-- ════════ NOTIFICATION MODAL ════════ -->
   <div class="notif-overlay" id="notifOverlay">

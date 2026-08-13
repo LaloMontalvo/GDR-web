@@ -538,15 +538,26 @@ function initProjectModal() {
   }
 }
 
-/* ── Mobile Video Autoplay Fallback ── */
+/* ── Hero Video: slow-motion loop ── */
 function initMobileVideo() {
   const video = document.getElementById('hero-video');
   if (!video) return;
 
-  // Attempt to play on first interaction if it's paused
+  const SLOW_RATE = 0.5;     // slow-motion speed (0.4× = 2.5× slower)
+
+  // Set slow-motion playback rate
+  video.playbackRate = SLOW_RATE;
+
+  // When metadata is ready, ensure the rate is set
+  video.addEventListener('loadedmetadata', () => {
+    video.playbackRate = SLOW_RATE;
+  });
+
+  // Mobile autoplay fallback — play on first interaction
   const playVideo = () => {
     if (video.paused) {
-      video.play().catch(e => console.log('Autoplay preventions:', e));
+      video.playbackRate = SLOW_RATE;
+      video.play().catch(e => console.log('Autoplay prevention:', e));
     }
   };
 
